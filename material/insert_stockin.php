@@ -3,7 +3,7 @@
 
 <?php
     session_start();
-    require_once "../config/configpdo.php";
+    require_once "../config/config_sqli.php";
 
     if (isset($_POST['submit'])) {
         $M_ID = $_POST['M_ID'];
@@ -13,51 +13,44 @@
         $S_unit_pack = $_POST['S_unit_pack'];
         $S_cost = $_POST['S_cost'];
         
-
-        $sql = $conn->prepare("INSERT INTO stockin(M_ID, M_name, S_date, S_in, S_unit_pack, S_cost) VALUES(:M_ID, :M_name, :S_date, :S_in, :S_unit_pack, :S_cost)"); 
-        $sql->bindParam(":M_ID", $M_ID);
-        $sql->bindParam(":M_name", $M_name);
-        $sql->bindParam(":S_date", $S_date);
-        $sql->bindParam(":S_in", $S_in);
-        $sql->bindParam(":S_unit_pack", $S_unit_pack);
-        $sql->bindParam(":S_cost", $S_cost);
-        $sql->execute();
+        //เพิ่มข้อมูลลงใน ตาราง material คอลัมน์ M_balane
+        $sql3 = $conn->query("SELECT * FROM material WHERE id = $M_name");
+        $row3 = mysqli_fetch_array($sql3);
+        $tu_balance = $row3["M_number"]*$S_in;
+        
+        $sql = "INSERT INTO stockin(M_ID, M_name, S_date, S_in, S_unit_pack, S_balance, S_cost) VALUES('$M_ID', '$M_name', '$S_date', '$S_in','$S_unit_pack','$tu_balance','$S_cost')"; 
+        $result = mysqli_query($conn, $sql);
 
 
-        $sql1 = $conn->prepare("UPDATE material SET M_balane = (:S_in)"); 
-        $sql1->bindParam(":S_in", $S_in);
-        $sql1->execute();
+        $sql2 = $conn->prepare("UPDATE material SET M_balane = M_balane+$S_in,U_balance= U_balance+'$tu_balance' WHERE id = $M_name");
+        
+        //เพิ่มข้อมูลลงใน ตาราง stockin คอลัมน์ S_balance
 
-        if ($sql) {
-            $_SESSION['success'] = "รับเข้าวัตถุดิบเรียบร้อยแล้ว";
-            echo "<script>
-                $(document).ready(function () {
-                    Swal.fire ({
-                        icon: 'success',
-                        title: 'สำเร็จ',
-                        text: 'รับเข้าวัตถุดิบเรียบร้อยแล้ว',
-                        timer: 2000,
-                        showConfirmButton: true
-                    });
-                });
-            </script>";
-            header("refresh:2; url=../material/stockin_material.php");
+        if ($sql && $sql2->execute()) {
+            $_SESSION['success'] = '<script>
+                    Swal.fire({
+                        position: "center",
+                        icon: "success",
+                        title: "รับเข้าวัตถุดิบเรียบร้อยแล้ว",
+                        showConfirmButton: false,
+                        timer: 1500
+                      })
+                </script>';
+                    
+                    header("location: ../material/index_stockin.php");
         } else {
-            $_SESSION['error'] = "แก้ไขข้อมูลไม่สำเร็จ";
-            echo "<script>
-                $(document).ready(function () {
-                    Swal.fire ({
-                        icon: error',
-                        title: 'เกิดข้อผิดพลาด',
-                        text: 'แก้ไขข้อมูลไม่สำเร็จ',
-                        timer: 2000,
-                        showConfirmButton: true
-                    });
-                });
-            </script>";
-            header("refresh:2; url=../material/stockin_material.php");
+            $_SESSION['error'] = '<script>
+                    Swal.fire({
+                        position: "center",
+                        icon: "error",
+                        title: "รับเข้าวัตถุดิบไม่สำเร็จ",
+                        showConfirmButton: false,
+                        timer: 1500
+                      })
+                </script>';
+                    
+                    header("location: ../material/index_stockin.php");
+            
         }
     }
-
-    
 ?>

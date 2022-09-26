@@ -1,5 +1,27 @@
+<script src="https://code.jquery.com/jquery-3.6.0.js"></script>
+<script src="https://cdn.jsdelivr.net/npm/sweetalert2@11"></script>
 <?php
 include '../config/config_sqli.php';
+session_start();
+if (isset($_GET['logout'])) {
+  
+  unset($_SESSION['username']);
+  session_destroy();
+  echo "<script>
+        $(document).ready(function () {
+        Swal.fire ({
+              icon: 'success',
+              title: 'ออกจากระบบแล้ว',
+              text: 'กำลังกลับไปยังหน้าล็อคอิน',
+              timer: 3000,
+              showConfirmButton: false,
+        });
+        });
+  </script>";
+  header("refresh:2; url=../loginform.php");
+  // header("location: loginform.php");
+  
+}
 ?>
 
 <!DOCTYPE html>
@@ -18,7 +40,7 @@ include '../config/config_sqli.php';
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/5.13.0/css/all.min.css">
     <!--flaticon-->
     <link href="https://registry.npmjs.org/@flaticon/flaticon-uicons/-/flaticon-uicons-1.7.0.tgz" rel="stylesheet"> 
-
+    <link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Bai+Jamjuree:ital,wght@0,200;0,300;0,400;0,500;0,600;0,700;1,200;1,300;1,400;1,500;1,600;1,700&family=Chakra+Petch:ital,wght@0,300;0,400;0,600;0,700;1,300;1,500;1,600;1,700&display=swap">
     <!--css-->
     <link rel="stylesheet" href="../style.css">
 
@@ -119,6 +141,19 @@ include '../config/config_sqli.php';
         </ul>
       </li>
 
+      <li>
+          <div class="iocn-link">
+          <a href="../material/manage_report.php">
+          <i class='bx bxs-receipt'></i>
+              <span class="link_name">รายงาน</span>
+          </a>
+          <i class='bx bxs-chevron-down arrow'></i>
+          </div>
+          <ul class="sub-menu">
+          <li><a href="../material/manage_report.php">รายงานวัตถุดิบคงเหลือ</a></li>
+          </ul>
+      </li>
+
       
      
 
@@ -128,10 +163,10 @@ include '../config/config_sqli.php';
         <img src="../image/bekery.jpg" alt="profileImg">
       </div>
       <div class="name-job">
-        <div class="profile_name">Bekery</div>
-        <div class="job">Web Desginer</div>
+        <div class="profile_name">เจ้าของร้าน</div>
+        <div class="job">BEKERY STORE</div>
       </div>
-      <a href="../index.php?logout='1'"> <i class='bx bx-log-out'  id="log_out" ></i> </a>
+      <a href="adduser.php?logout='1'"> <i class='bx bx-log-out'  id="log_out" ></i> </a>
     </div>
   </li>
 </ul>

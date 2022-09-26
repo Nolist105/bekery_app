@@ -77,6 +77,19 @@
         </ul>
       </li>
 
+      <li>
+        <div class="iocn-link">
+          <a href="../material/manage_report.php">
+          <i class='bx bxs-receipt'></i>
+            <span class="link_name">รายงาน</span>
+          </a>
+          <i class='bx bxs-chevron-down arrow'></i>
+        </div>
+        <ul class="sub-menu">
+          <li><a href="../material/manage_report.php">รายงานวัตถุดิบคงเหลือ</a></li>
+        </ul>
+      </li>
+
       
      
 

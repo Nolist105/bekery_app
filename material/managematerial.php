@@ -3,6 +3,25 @@
 
 <?php
     session_start();
+    if (isset($_GET['logout'])) {
+      
+      unset($_SESSION['username']);
+      session_destroy();
+      echo "<script>
+            $(document).ready(function () {
+            Swal.fire ({
+                  icon: 'success',
+                  title: 'ออกจากระบบแล้ว',
+                  text: 'กำลังกลับไปยังหน้าล็อคอิน',
+                  timer: 3000,
+                  showConfirmButton: false,
+            });
+            });
+      </script>";
+      header("refresh:2; url=../loginform.php");
+      // header("location: loginform.php");
+      
+    }
     require_once "../config/configpdo.php";
 
     if (isset($_GET['delete'])) {
@@ -58,6 +77,8 @@
         </ul>
       </li>
 
+      
+
       <li>
         <div class="iocn-link">
           <a href="../user/user.php">
@@ -112,7 +133,7 @@
         <div class="profile_name">Bekery</div>
         <div class="job">Web Desginer</div>
       </div>
-      <a href="../index.php?logout='1'"> <i class='bx bx-log-out'  id="log_out" ></i> </a>
+      <a href="manage_material.php?logout='1'"> <i class='bx bx-log-out'  id="log_out" ></i> </a>
     </div>
   </li>
 </ul>

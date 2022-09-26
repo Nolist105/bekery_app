@@ -1,8 +1,27 @@
 <script src="https://code.jquery.com/jquery-3.6.0.js"></script>
-<script src="//cdn.jsdelivr.net/npm/sweetalert2@11"></script>
+<script src="https://cdn.jsdelivr.net/npm/sweetalert2@11"></script>
 
 <?php
     session_start();
+    if (isset($_GET['logout'])) {
+      
+      unset($_SESSION['username']);
+      session_destroy();
+      echo "<script>
+            $(document).ready(function () {
+            Swal.fire ({
+                  icon: 'success',
+                  title: 'ออกจากระบบแล้ว',
+                  text: 'กำลังกลับไปยังหน้าล็อคอิน',
+                  timer: 3000,
+                  showConfirmButton: false,
+            });
+            });
+      </script>";
+      header("refresh:2; url=../loginform.php");
+      // header("location: loginform.php");
+      
+    }
     require_once "../config/configpdo.php";
 
     if (isset($_GET['delete'])) {
@@ -95,7 +114,7 @@
     <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/bootstrap-icons@1.9.1/font/bootstrap-icons.css">
     <!--flaticon-->
     <link href="https://registry.npmjs.org/@flaticon/flaticon-uicons/-/flaticon-uicons-1.7.0.tgz" rel="stylesheet"> 
-
+    <link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Bai+Jamjuree:ital,wght@0,200;0,300;0,400;0,500;0,600;0,700;1,200;1,300;1,400;1,500;1,600;1,700&family=Chakra+Petch:ital,wght@0,300;0,400;0,600;0,700;1,300;1,500;1,600;1,700&display=swap">
     <!--css-->
     <link rel="stylesheet" href="../style.css">
 
@@ -109,7 +128,7 @@
 
     <ul class="nav-links">
       <li>
-        <a href="index.php">
+        <a href="../index.php">
           <i class='bx bxs-home-smile'></i>
           <span class="link_name">หน้าหลัก</span>
         </a>
@@ -120,7 +139,7 @@
 
       <li>
         <div class="iocn-link">
-          <a href="#">
+          <a href="../user/user.php">
             <i class='bx bxs-user'></i>
             <span class="link_name">ผู้ใช้</span>
           </a>
@@ -133,7 +152,7 @@
 
       <li>
         <div class="iocn-link">
-          <a href="#">
+          <a href="../product/index.php">
             <i class='bx bxl-product-hunt'></i>
             <span class="link_name">สินค้า</span>
           </a>
@@ -146,7 +165,7 @@
 
       <li>
         <div class="iocn-link">
-          <a href="#">
+          <a href="../material/index.php">
             <i class='bx bxs-calendar-heart'></i>
             <span class="link_name">วัตถุดิบ</span>
           </a>
@@ -157,33 +176,20 @@
         </ul>
       </li>
 
+
       <li>
         <div class="iocn-link">
-          <a href="#">
-            <i class='bx bxs-bookmark-alt'></i>
-            <span class="link_name">จัดการวัตถุดิบ</span>
+          <a href="../material/manage_report.php">
+          <i class='bx bxs-receipt'></i>
+            <span class="link_name">รายงาน</span>
           </a>
-          <i class='bx bxs-chevron-down arrow' ></i>
+          <i class='bx bxs-chevron-down arrow'></i>
         </div>
         <ul class="sub-menu">
-          <li><a class="link_name" href="#">จัดการวัตถุดิบ</a></li>
-          <li><a href="#">รายการจัดการวัตถุดิบ</a></li>
+          <li><a href="../material/manage_report.php">รายงานวัตถุดิบคงเหลือ</a></li>
         </ul>
       </li>
-      
-      <li>
-        <div class="iocn-link">
-          <a href="#">
-            <i class='bx bxs-message-square-edit'></i>
-            <span class="link_name">สต็อกวัตถุดิบ</span>
-          </a>
-          <i class='bx bxs-chevron-down arrow' ></i>
-        </div>
-        <ul class="sub-menu">
-          <li><a class="link_name" href="#">สต็อกวัตถุดิบ</a></li>
-          <li><a href="#">รายการสต็อกวัตถุดิบ</a></li>
-        </ul>
-      </li>
+
      
 
       <li>
@@ -192,10 +198,10 @@
         <img src="../image/bekery.jpg" alt="profileImg">
       </div>
       <div class="name-job">
-        <div class="profile_name">Bekery</div>
-        <div class="job">Web Desginer</div>
+        <div class="profile_name">เจ้าของร้าน</div>
+        <div class="job">BEKERY STORE</div>
       </div>
-      <a href="../index.php?logout='1'"> <i class='bx bx-log-out'  id="log_out" ></i> </a>
+      <a href="restore_material.php?logout='1'"> <i class='bx bx-log-out'  id="log_out" ></i> </a>
     </div>
   </li>
 </ul>

@@ -1,3 +1,4 @@
+<script src="https://code.jquery.com/jquery-3.6.0.js"></script>
 <script src="https://cdn.jsdelivr.net/npm/sweetalert2@11"></script>
 <?php 
     session_start();
@@ -20,19 +21,55 @@
                 $_SESSION['urole'] = $row["urole"];
                 } if ($_SESSION["urole"]=="1"){
                     $_SESSION['username'] = $row["username"];
-                    $_SESSION['password'] = $row["password"];
+                    $_SESSION['success'] = "เข้าสู่ระบบแล้ว";
+                            echo "<script>
+                        $(document).ready(function () {
+                            Swal.fire ({
+                                icon: 'success',
+                                title: 'ช้อมูลถูกต้อง',
+                                text: 'เจ้าของร้านเข้าสู่ระบบสำเร็จ',
+                                timer: 2000,
+                                showConfirmButton: true
+                            });
+                        });
+                    </script>";
+                    
                     header("location: index.php");
-                    session_destroy();
+                    // session_destroy();
+
                 }else if ($_SESSION["urole"]=="0"){
                     $_SESSION['username'] = $row["username"];
                     $_SESSION['password'] = $row["password"];
+                    echo "<script>
+                        $(document).ready(function () {
+                            Swal.fire ({
+                                icon: 'success',
+                                title: 'ช้อมูลถูกต้อง',
+                                text: 'พนักงานเข้าสู่ระบบสำเร็จ',
+                                timer: 2000,
+                                showConfirmButton: true
+                            });
+                        });
+                    </script>";
                     header("location: indexuser.php");
-                    session_destroy();
+                    // session_destroy();
+
                 }else if($_SESSION["urole"]!="0" && $_SESSION["urole"]!= "1"){
                     $_SESSION['username'] = $row["username"];
                     $_SESSION['password'] = $row["password"];
+                    echo "<script>
+                    $(document).ready(function () {
+                        Swal.fire ({
+                            icon: 'error',
+                            title: 'ช้อมูลไม่ถูกต้อง',
+                            text: 'ไม่สามารถเข้าสู่ระบบ',
+                            timer: 2000,
+                            showConfirmButton: true
+                            });
+                        });
+                    </script>";
                     header("location: loginform.php");
-                    session_destroy();
+                    // session_destroy();
                 }    
         } 
     }

@@ -1,5 +1,28 @@
+<script src="https://code.jquery.com/jquery-3.6.0.js"></script>
+<script src="https://cdn.jsdelivr.net/npm/sweetalert2@11"></script>
 <?php 
     session_start();
+
+    if (isset($_GET['logout'])) {
+      
+      unset($_SESSION['username']);
+      session_destroy();
+      echo "<script>
+            $(document).ready(function () {
+            Swal.fire ({
+                  icon: 'success',
+                  title: 'ออกจากระบบแล้ว',
+                  text: 'กำลังกลับไปยังหน้าล็อคอิน',
+                  timer: 3000,
+                  showConfirmButton: false,
+            });
+            });
+      </script>";
+      header("refresh:2; url=../loginform.php");
+      // header("location: loginform.php");
+      
+    }
+
     require_once "../config/config_sqli.php";
     $query = "SELECT * FROM product ORDER BY P_ID desc limit 1";
     $result = mysqli_query($conn, $query);
@@ -37,12 +60,21 @@
     <link href='https://unpkg.com/boxicons@2.0.7/css/boxicons.min.css' rel='stylesheet'>
     <!--flaticon-->
     <link href="https://registry.npmjs.org/@flaticon/flaticon-uicons/-/flaticon-uicons-1.7.0.tgz" rel="stylesheet"> 
-
+    <link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Bai+Jamjuree:ital,wght@0,200;0,300;0,400;0,500;0,600;0,700;1,200;1,300;1,400;1,500;1,600;1,700&family=Chakra+Petch:ital,wght@0,300;0,400;0,600;0,700;1,300;1,500;1,600;1,700&display=swap">
     <!--css-->
     <link rel="stylesheet" href="../style.css">
 
 </head>
 <body>
+<?php
+        if(isset($_SESSION['error'])){
+            echo $_SESSION['error'];
+            unset($_SESSION['error']);
+        }elseif(isset($_SESSION['success'])){
+            echo $_SESSION['success'];
+            unset($_SESSION['success']);
+        }
+    ?>
 <div class="sidebar close" >
     <div class="logo-details">
     <i class='bx bxs-cake'></i>
@@ -62,7 +94,7 @@
 
       <li>
         <div class="iocn-link">
-          <a href="#">
+          <a href="../user/user.php">
             <i class='bx bxs-user'></i>
             <span class="link_name">ผู้ใช้</span>
           </a>
@@ -75,7 +107,7 @@
 
       <li>
         <div class="iocn-link">
-          <a href="#">
+          <a href="../product/index.php">
             <i class='bx bxl-product-hunt'></i>
             <span class="link_name">สินค้า</span>
           </a>
@@ -88,7 +120,7 @@
 
       <li>
         <div class="iocn-link">
-          <a href="#">
+          <a href="../material/index.php">
             <i class='bx bxs-calendar-heart'></i>
             <span class="link_name">วัตถุดิบ</span>
           </a>
@@ -97,6 +129,19 @@
         <ul class="sub-menu">
           <li><a href="../material/index.php">รายการวัตถุดิบ</a></li>
         </ul>
+      </li>
+
+      <li>
+          <div class="iocn-link">
+          <a href="../material/manage_report.php">
+          <i class='bx bxs-receipt'></i>
+              <span class="link_name">รายงาน</span>
+          </a>
+          <i class='bx bxs-chevron-down arrow'></i>
+          </div>
+          <ul class="sub-menu">
+          <li><a href="../material/manage_report.php">รายงานวัตถุดิบคงเหลือ</a></li>
+          </ul>
       </li>
 
     
@@ -108,10 +153,10 @@
         <img src="../image/bekery.jpg" alt="profileImg">
       </div>
       <div class="name-job">
-        <div class="profile_name">Bekery</div>
-        <div class="job">Web Desginer</div>
+        <div class="profile_name">เจ้าของร้าน</div>
+        <div class="job">BEKERY STORE</div>
       </div>
-      <a href="../index.php?logout='1'"> <i class='bx bx-log-out'  id="log_out" ></i> </a>
+      <a href="add_product.php?logout='1'"> <i class='bx bx-log-out'  id="log_out" ></i> </a>
     </div>
   </li>
 </ul>

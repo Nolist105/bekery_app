@@ -3,35 +3,53 @@
 
 <?php
     session_start();
-    require_once "../config/configpdo.php";
+    require_once "../config/config_sqli.php";
 
+    if (isset($_GET['logout'])) {
+      
+      unset($_SESSION['username']);
+      session_destroy();
+      echo "<script>
+            $(document).ready(function () {
+            Swal.fire ({
+                  icon: 'success',
+                  title: 'ออกจากระบบแล้ว',
+                  text: 'กำลังกลับไปยังหน้าล็อคอิน',
+                  timer: 3000,
+                  showConfirmButton: false,
+            });
+            });
+      </script>";
+      header("refresh:2; url=../loginform.php");
+      // header("location: loginform.php");
+      
+    }
 
     if (isset($_GET['delete'])) {
         $delete_id = $_GET['delete'];
-        $stmt = $conn -> query("UPDATE product set P_status='0' WHERE id = $delete_id");
-        $stmt -> execute();
+        $stmt1 = "UPDATE product set P_status='0' WHERE id = $delete_id";
+        $stmt1 = mysqli_query($conn, $stmt1);
 
-        if ($stmt) {
+        if ($stmt1 ) {
             $_SESSION['success'] = "ลบข้อมูลเรียบร้อยแล้ว";
             header("refresh:2; url=../material/index.php");
         } 
-  }
+  } 
 ?>
-
-
-
 
 <!DOCTYPE html>
 <html lang="en">
+
 <head>
     <meta charset="UTF-8">
     <meta http-equiv="X-UA-Compatible" content="IE=edge">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>รายการสินค้า</title>
-
+    <title>สินค้า</title>
     <!--Bootstap-->
     <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.0.2/dist/css/bootstrap.min.css" rel="stylesheet"
-    integrity="sha384-EVSTQN3/azprG1Anm3QDgpJLIm9Nao0Yz1ztcQTwFspd3yD65VohhpuuCOmLASjC" crossorigin="anonymous">
+        integrity="sha384-EVSTQN3/azprG1Anm3QDgpJLIm9Nao0Yz1ztcQTwFspd3yD65VohhpuuCOmLASjC" crossorigin="anonymous">
+    <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/bootstrap-icons@1.9.1/font/bootstrap-icons.css">
+    <link rel="stylesheet" href="https://cdn.datatables.net/1.12.1/css/dataTables.bootstrap5.min.css">
     <!--boxicon-->
     <link href='https://unpkg.com/boxicons@2.0.7/css/boxicons.min.css' rel='stylesheet'>
     <!--flaticon-->
@@ -41,9 +59,51 @@
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/5.13.0/css/all.min.css">
     <!--css-->
     <link rel="stylesheet" href="../style.css">
+    <link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Bai+Jamjuree:ital,wght@0,200;0,300;0,400;0,500;0,600;0,700;1,200;1,300;1,400;1,500;1,600;1,700&family=Chakra+Petch:ital,wght@0,300;0,400;0,600;0,700;1,300;1,500;1,600;1,700&display=swap">
 
+
+    <style>
+    body {
+        font-family: Bai Jamjuree;
+    }
+
+    .icon-cog {
+        color: #ffc107;
+        font-size: 20px;
+    }
+
+    .icon-de {
+        color: red;
+        font-size: 20px
+    }
+
+    .icon-ing {
+        color: green;
+        font-size: 20px
+    }
+    .icon-ing1 {
+        color: blue;
+        font-size: 20px
+    }
+
+    .icon-ing-do {
+        color: grey;
+        font-size: 20px
+    }
+    </style>
 </head>
+
 <body>
+    <?php
+        if(isset($_SESSION['success'])){
+            echo $_SESSION['success'];
+            unset($_SESSION['success']);
+        }elseif(isset($_SESSION['error'])){
+            echo $_SESSION['error'];
+            unset($_SESSION['error']);
+        }
+    ?>
+
 <div class="sidebar close">
     <div class="logo-details">
     <i class='bx bxs-cake'></i>
@@ -100,8 +160,18 @@
         </ul>
       </li>
 
-      
-     
+      <li>
+          <div class="iocn-link">
+          <a href="../material/manage_report.php">
+          <i class='bx bxs-receipt'></i>
+              <span class="link_name">รายงาน</span>
+          </a>
+          <i class='bx bxs-chevron-down arrow'></i>
+          </div>
+          <ul class="sub-menu">
+          <li><a href="../material/manage_report.php">รายงานวัตถุดิบคงเหลือ</a></li>
+          </ul>
+      </li>
 
       <li>
     <div class="profile-details">
@@ -109,10 +179,10 @@
         <img src="../image/bekery.jpg" alt="profileImg">
       </div>
       <div class="name-job">
-        <div class="profile_name">Bekery</div>
-        <div class="job">Web Desginer</div>
+        <div class="profile_name">เจ้าของร้าน</div>
+        <div class="job">BEKERY STORE</div>
       </div>
-      <a href="../index.php?logout='1'"> <i class='bx bx-log-out'  id="log_out" ></i> </a>
+      <a href="index.php?logout='1'"> <i class='bx bx-log-out'  id="log_out" ></i> </a>
     </div>
   </li>
 </ul>
@@ -128,82 +198,84 @@
         <hr>
         <a href="add_product.php" class="btn btn-success mb-4"><i class="bi bi-plus-circle-fill"></i> เพิ่มสินค้า</a>
         <a href="restore_product.php" class="btn btn-outline-info mb-4"><i class="bi bi-trash3"></i> คืนค่าข้อมูล</a>
-        
-  <form action="inserting.php" id="check" method="POST" enctype="multipart/form-data">
-        <table class="table table-striped table-hover table-bordered mt-2">
-            <thead>
-                <tr>
+
+        <table id="datatableid" class="table table-striped table-hover table-bordered">
+            <thead class="table-danger">
+                <tr align="center">
+
                     <th scope="col">รหัสสินค้า</th>
                     <th scope="col">ชื่อสินค้า</th>
                     <th scope="col">รูปภาพ</th>
                     <th scope="col">ราคา</th>
                     <th scope="col">หน่วยผลิต</th>
-                    <th scope="col">จำนวนแปลงหน่วย</th>
+                    <th scope="col">จำนวนต่อหน่วย</th>
                     <th scope="col">จัดการ</th>
-                    <th scope="col">สูตรการผลิต</th>
                 </tr>
             </thead>
             <tbody>
                 <?php 
-                    $stmt = $conn -> query("SELECT * FROM product WHERE P_status='1' ");
-                    $stmt -> execute();
-                    $product = $stmt -> fetchAll();
+                        $stmt = "SELECT * FROM product WHERE P_status='1'" ;
+                        $product=mysqli_query($conn,$stmt);
+
 
                     if (!$product) {
                         echo "<p><td colspan='8' class='text-center'>ไม่มีข้อมูล</td></p>";
                     } else {
                     foreach($product as $product)  {  
                 ?>
-                <tr>
+                <tr align="center">
                     <td><?php echo $product['P_ID']; ?></td>
                     <td><?php echo $product['P_name']; ?></td>
-                    <td><img   style="width: 100px; height: 70px;" src="../uploads/<?= $product['P_image']; ?>" class="rounded" alt=""></td>
-                    <td><?php echo $product['Price']; ?></td>
+                    <td><img height="60" width="70" src="../uploads/<?= $product['P_image']; ?>" class="rounded" alt="">
+                    </td>
+                    <td><?php echo number_format($product['Price'], 2); ?></td>
                     <td><?php echo $product['P_unit_pro']; ?></td>
                     <td><?php echo $product['P_number']; ?></td>
-                    
-                    <td width="200px">
-                        <a href="edit.php?id=<?php echo $product['id']; ?>"  class="btn btn-warning">แก้ไข</a>
+                    <td>
+                        <a href="edit.php?id=<?php echo $product['id']; ?>"
+                            class="icon-cog fs-5 me-3 btn btn-outline-warning"><i class="bi bi-pencil-fill"></i></a>
                         <a data-id="<?php echo $product['id']; ?>" href=" ?delete=<?php echo $product['id']; ?>"
-                        class="btn btn-danger delete-btn">ลบ</a>
-                    </td>
-                    
-                    <td width="200px">
-                    <?php 
-                        require_once "../config/config_sqli.php";
-                        $P_ID = "";
-                        $stmt2 = "SELECT * FROM ing WHERE P_ID = '".$product['id']."'";
+                            class="delete-btn icon-de fs-5 me-3 btn btn-outline-danger"><i
+                                class="bi bi-trash3-fill"></i></a>
 
-                        $q = mysqli_query($conn, $stmt2);
-                        $followingdata = $q->fetch_assoc();
+                        <?php 
                         
-                        if(mysqli_num_rows($q) >0){
-                            if ($product['id'] == $followingdata['P_ID']) {
-                                echo '<button type="submit" name="submit" class="btn btn-success ">ดูสูตร</button>';
-                            } 
-                        }else{
-                            echo "<a href='ingredient.php?id=".$product['id']."' class='btn btn-primary'><i class='bi bi-plus-circle-fill'></i> เพิ่มสูตร</a>";
-                        }
-                    ?>
+                            $P_ID = "";
+                            $stmt2 = "SELECT * FROM ing WHERE P_ID = '".$product['id']."'";
+                            $q = mysqli_query($conn, $stmt2);
+                            $followingdata = $q->fetch_assoc();
+                            
+                            if(mysqli_num_rows($q) >0){
+                                if ($product['id'] == $followingdata['P_ID']) {
+                                    
+                                    echo "<a href='ingproduct.php?id=".$product['id']."'class='btn btn-outline-success fs-5 me-3'><i class='far fa-eye'></i></a>";
+                                    echo "<a href='editingredient.php?id=".$product['id']."'class='btn btn-outline-success'><i class='bi bi-pencil-square'></i></a>";
+                                } 
+                            }else{
+                                echo "<a href='ingredient.php?id=".$product['id']."' class='icon-ing1 btn btn-outline-primary'><i class='bi bi-file-earmark-plus-fill'></i></a>";
+                            }
+                        ?>
                     </td>
-                    
 
                 </tr>
                 <?php } 
                 } ?>
             </tbody>
-            
+
         </table>
 
-        </form>
         
     </div>
-    </section>
+  </section>
+    
     <script src="https://code.jquery.com/jquery-3.6.0.js"></script>
-    <script src="https://cdn.jsdelivr.net/npm/sweetalert2@11"></script>
+    <script src="//cdn.jsdelivr.net/npm/sweetalert2@11"></script>
     <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.0.2/dist/js/bootstrap.bundle.min.js"
         integrity="sha384-MrcW6ZMFYlzcLA8Nl+NtUVF0sA7MsXsP1UyJoMp4YLEuNSfAP+JcXn/tWtIaxVXM" crossorigin="anonymous">
     </script>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/jquery/3.6.1/jquery.min.js"></script>
+    <script src="https://cdn.datatables.net/1.12.1/js/jquery.dataTables.min.js"></script>
+    <script src="https://cdn.datatables.net/1.12.1/js/dataTables.bootstrap5.min.js"></script>
 
     <script>
     $('.delete-btn').click(function(e) {
@@ -251,26 +323,41 @@
         })
     }
     </script>
+    <script>
+    $(document).ready(function() {
 
+        $('#datatableid').DataTable({
+            language: {
+                "decimal": "",
+                "emptyTable": "ไม่มีข้อมูลในตาราง",
+                "info": "แสดง _START_ - _END_ จาก _TOTAL_ รายการ",
+                "infoEmpty": "แสดง 0 - 0 จาก 0 รายการ",
+                "infoFiltered": "(กรอง จาก _MAX_ รายการทั้งหมด)",
+                "infoPostFix": "",
+                "thousands": ",",
+                "lengthMenu": "แสดง _MENU_ รายการ",
+                "loadingRecords": "กำลังโหลด...",
+                "processing": "",
+                "search": "ค้นหา:",
+                "zeroRecords": "ไม่พบบันทึกที่ตรงกัน",
+                "paginate": {
+                    "first": "First",
+                    "last": "Last",
+                    "next": "หน้าถัดไป",
+                    "previous": "ก่อนหน้า"
+                },
+                "aria": {
+                    "sortAscending": ": activate to sort column ascending",
+                    "sortDescending": ": activate to sort column descending"
+                }
+            },
+            "searching": false,
 
- 
-
-  <script src="../script.js"></script>
-
-  <script src="../script.js"></script>
-            <script>
-              var form = document.getElementsByName('check');
-              var values = [];
-              form.addEventListner('save_order', function(e){
-                  e.prevenDefault();
-                  var checkbox = document.getElementsByName('inglist');
-                  for(var i = 0; i < checkbox.length; i++){
-                    if(checkbox[i].checked == true) {
-                      values.push(checkbox[i].value);
-                    }
-                  }
-              });
-            </script>
+        });
+    });
+    </script>
+ <script src="../script.js"></script>
 
 </body>
+
 </html>

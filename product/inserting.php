@@ -7,90 +7,60 @@ session_start();
 require_once '../config/config_sqli.php';
 
 if(isset($_POST['save_order']))
+
 {
+    $id = $_POST['id'];
+    $inglist = $_POST['inglist'];
+    $mat_name = $_POST['mat_name'];
+    $ing_num = $_POST['ing_num'];
+    $ing_use = $_POST['ing_use'];
+    $P_ID = $_POST['P_ID'];
+    $P_quantity = $_POST['P_quantity'];
     
-    if(isset($_POST['name']) ) {
-        echo "<script>
-        $(document).ready(function () {
-            Swal.fire ({
-                icon: 'error',
-                title: 'เกิดข้อผิดพลาด',
-                text: 'เพิ่มข้อมูลไม่สำเร็จ',
-                timer: 2000,
-                showConfirmButton: true
-            });
-        });
-    </script>";
-    // header("refresh:2; url=../product/index.php");
-        $inglist = $_POST['inglist'];
-        $ing_num = $_POST['ing_num'];
-        $ing_use = $_POST['ing_use'];
-        $P_ID = $_POST['P_ID'];
-        $P_quantity = $_POST['P_quantity'];
+        for ($x=0 ; $x<count($_REQUEST['inglist']) ; $x++) {
 
-            for ($x=0 ; $x<count($_POST['inglist']) ; $x++) {
-               
-                $inglist = $_POST['inglist'][$x];
-                $ing_num = $_POST['ing_num'][$x];
-                $ing_use = $_POST['ing_use'][$x];
-                $P_ID = $_POST['P_ID'][$x];
-                $P_quantity = $_POST['P_quantity'][$x];
-                
+            $inglist = $_REQUEST['inglist'][$x];
+            $mat_name = $_POST['mat_name'][$x];
+            $ing_num = $_REQUEST['ing_num'][$x];
+            $ing_use = $_REQUEST['ing_use'][$x];
+            $P_ID = $_REQUEST['P_ID'][$x];
+            $P_quantity = $_REQUEST['P_quantity'][$x];
+            
 
-                if (!empty($ing_num) and isset($_POST['name']) ) {
-                    $query = "INSERT INTO ing (M_ID,ing_num,ing_use,P_ID,P_quantity) VALUES ('$inglist','$ing_num','$ing_use','$P_ID','$P_quantity')";
-                    $query_run = mysqli_query($conn, $query);
+            if (!empty($ing_num)) {
+                $query = "INSERT INTO ing (M_ID,M_name,ing_num,ing_use,P_ID,P_quantity) VALUES ('$inglist','$mat_name','$ing_num','$ing_use','$P_ID','$P_quantity')";
+                $query_run = mysqli_query($conn, $query);
+                }
 
-                    if ($query_run) {
-                        echo "<script>
-                        $(document).ready(function () {
-                            Swal.fire ({
-                                icon: 'success',
-                                title: 'ช้อมูลถูกต้อง',
-                                text: 'เพิ่มข้อมูลสำเร็จ',
-                                timer: 2000,
-                                showConfirmButton: true
-                            });
-                        });
-                    </script>";
-                        // header("location: ../product/index.php");
-                        header("refresh:2; url=../product/index.php");
-                    } 
-                 }
-                 
+                if ($query_run) {
+                    $_SESSION['success'] = '<script>
+                        Swal.fire({
+                            position: "center",
+                            icon: "success",
+                            title: "เพิ่มข้อมูลเรียบร้อยแล้ว",
+                            showConfirmButton: false,
+                            timer: 1500
+                          })
+                    </script>';
+                        
+                    header("location: ../product/index.php");
+                } else {
+                    $_SESSION['success'] = '<script>
+                        Swal.fire({
+                            position: "center",
+                            icon: "error",
+                            title: "เพิ่มข้อมูลไม่สำเร็จ",
+                            showConfirmButton: false,
+                            timer: 1500
+                          })
+                    </script>';
                     
-            }
-                
-    }if(!isset($_POST['name'])) {
-        echo "<script>
-        $(document).ready(function () {
-            Swal.fire ({
-                icon: 'error',
-                title: 'เกิดข้อผิดพลาด',
-                text: 'เพิ่มข้อมูลไม่สำเร็จ',
-                timer: 2000,
-                showConfirmButton: true
-            });
-        });
-    </script>";
-     header("refresh:2; url=../product/index.php");
-    }
+                    header("location: ../product/index.php");
+                }
+        }
+            
+           
 
 }
-else{
-    echo "<script>
-        $(document).ready(function () {
-            Swal.fire ({
-                icon: 'error',
-                title: 'เกิดข้อผิดพลาด',
-                text: 'เพิ่มข้อมูลไม่สำเร็จ',
-                timer: 2000,
-                showConfirmButton: true
-            });
-        });
-    </script>";
-     header("refresh:2; url=../product/index.php");
-    }
-
 
 ?>
