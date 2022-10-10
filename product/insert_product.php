@@ -54,8 +54,8 @@
                             $_SESSION['success'] = '<script>
                                 Swal.fire({
                                     position: "center",
-                                    icon: "error",
-                                    title: "เพิ่ม '.$P_name.' สำเร็จ",
+                                    icon: "success",
+                                    title: "เพิ่มข้อมูลสินค้าสำเร็จ",
                                     showConfirmButton: false,
                                     timer: 1500
                                     })

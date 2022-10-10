@@ -3,9 +3,17 @@
 
 <?php
     session_start();
+
+    require_once "../config/config_sqli.php";
+
+    if (!isset($_SESSION['user'])) {
+      $_SESSION['msg'] = "Please Login";
+      header("location:../loginform.php");
+    }
+
     if (isset($_GET['logout'])) {
       
-      unset($_SESSION['username']);
+      unset($_SESSION['user']);
       session_destroy();
       echo "<script>
             $(document).ready(function () {
@@ -29,7 +37,7 @@
     <meta charset="UTF-8">
     <meta http-equiv="X-UA-Compatible" content="IE=edge">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>จัดการข้อมูลความต้องการใช้สินค้า</title>
+    <title>จัดการข้อมูลความต้องการใช้วัตถุดิบ</title>
     <!--Bootstap-->
     <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/bootstrap-icons@1.9.1/font/bootstrap-icons.css">
     <link rel="stylesheet" href="https://cdn.datatables.net/1.12.1/css/dataTables.bootstrap5.min.css">
@@ -171,16 +179,16 @@
     </div>
 
     <div class="container">
-    <div class=" h4 text-center alert alert-info mb-4 mt-4" role="alert">จัดการข้อมูลความต้องการใช้สินค้า</div>
+    <div class=" h4 text-center alert alert-info mb-4 mt-4" role="alert">จัดการข้อมูลความต้องการใช้วัตถุดิบ</div>
     <hr>
-        <a href="orderpoint.php" class="btn btn-success mb-4"><i class="bi bi-plus-circle-fill"></i> เพิ่มความต้องการใช้สินค้า</a>
+        <a href="orderpoint.php" class="btn btn-success mb-4"><i class="bi bi-plus-circle-fill"></i> เพิ่มความต้องการใช้วัตถุดิบ</a>
         <table id="datatableid" class="table table-striped table-hover table-bordered">
             <thead class="table-danger">
                 <tr align="center">
                     <th scope="col">รหัสวัตถุดิบ</th>
                     <th scope="col">ชื่อวัตถุดิบ</th>
-                    <th scope="col">D</th>
-                    <th scope="col">LT</th>
+                    <th scope="col">ความต้องการใช้วัตถุดิบในแต่ละวัน(D)</th>
+                    <th scope="col">ระยะเวลาในการรอคอยวัตถุดิบ(LT)</th>
                     <th scope="col">จัดการ</th>
                 </tr>
             </thead>
@@ -200,8 +208,8 @@
                 
                     <td width="20%"><?php echo $orderpoint['M_ID']; ?></td>
                     <td><?php echo $orderpoint['M_name']; ?></td>
-                    <td><?php echo $orderpoint['D']; ?></td>
-                    <td><?php echo $orderpoint['LT']; ?></td>
+                    <td width="23%"><?php echo $orderpoint['D']; ?></td>
+                    <td width="23%"><?php echo $orderpoint['LT']; ?></td>
                     <td width="15%">
                     <a href="edit_orderpoint.php?id=<?php echo $orderpoint['id']; ?>" class="icon-cog "><i
                                 class="btn btn-outline-warning bi bi-pencil-fill"></i></a>
@@ -250,7 +258,7 @@
                     "sortDescending": ": activate to sort column descending"
                 }
             },
-            "searching": false,
+            
 
         });
     });

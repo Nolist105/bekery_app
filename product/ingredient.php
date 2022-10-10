@@ -145,10 +145,10 @@
                     $data = $stml->fetch();
                 }
             ?>
-            <div class="row">
+            <div class="row mb-2">
                 <div class="col">
                     <input hidden type="text" name="id" value="<?= $data['id']; ?>" class="form-control" > 
-                    <input readonly type="text" name="" value="<?= $data['P_ID']; ?>" class="form-control" > 
+                    <input readonly type="text" name="P_ID" value="<?= $data['P_ID']; ?>" class="form-control" > 
                 </div>
                 <div class="col">
                     <input readonly type="text" name="" value="<?= $data['P_name']; ?>" class="form-control" > 
@@ -242,7 +242,7 @@
                     "sortDescending": ": activate to sort column descending"
                 }
             },
-            "searching": false,
+           
 
         });
     });

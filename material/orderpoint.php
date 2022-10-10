@@ -3,9 +3,16 @@
 <?php
     ini_set('display_errors',1);
     session_start();
+    require_once '../config/config_sqli.php';
+
+    if (!isset($_SESSION['user'])) {
+      $_SESSION['msg'] = "Please Login";
+      header("location:../loginform.php");
+    }
+
     if (isset($_GET['logout'])) {
       
-      unset($_SESSION['username']);
+      unset($_SESSION['user']);
       session_destroy();
       echo "<script>
             $(document).ready(function () {
@@ -22,7 +29,7 @@
       // header("location: loginform.php");
       
     }
-    require_once '../config/config_sqli.php';
+   
     
 ?>
 
@@ -179,7 +186,7 @@
 
 
     <div class="container">
-        <div class=" h4 text-center alert alert-info mb-4 mt-4" role="alert">เพิ่มข้อมูลความต้องการใช้สินค้า</div>
+        <div class=" h4 text-center alert alert-info mb-4 mt-4" role="alert">เพิ่มข้อมูลความต้องการใช้วัตถุดิบ</div>
         <form action="insert_orderpoint.php" method="post" enctype="multipart/form-data">
 
             <div class="row">
@@ -219,17 +226,17 @@
                 </div>
             </div>
 
-            <label>D</label>
+            <label>ความต้องการใช้วัตถุดิบในแต่ละวัน(D)</label>
             <div class="input-group">
-                <input type="number" name="D" class="form-control" placeholder="ป้อนอัตราความต้องการสินค้าคงคลัง"
+                <input type="number" name="D" class="form-control" placeholder="ความต้องการใช้วัตถุดิบในแต่ละวัน"
                     required>
                 <span class="input-group-text">/วัน</span>
 
             </div>
 
-            <label>LT</label>
+            <label>ระยะเวลาในการรอคอยวัตถุดิบ(LT)</label>
             <div class="input-group">
-                <input type="number" name="LT" class="form-control" placeholder="ป้อนเวลาในการรอคอยสินค้า" required>
+                <input type="number" name="LT" class="form-control" placeholder="ป้อนเวลาในการรอคอยวัตถุดิบ" required>
                 <span class="input-group-text">วัน</span>
 
             </div>

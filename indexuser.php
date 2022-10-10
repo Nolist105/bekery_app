@@ -3,9 +3,15 @@
 <?php 
     session_start();
     require_once("config/config_sqli.php");
+
+    if (!isset($_SESSION['user'])) {
+      $_SESSION['msg'] = "Please Login";
+      header("location:loginform.php");
+    }
+
     if (isset($_GET['logout'])) {
   
-      unset($_SESSION['username']);
+      unset($_SESSION['user']);
       session_destroy();
       echo "<script>
             $(document).ready(function () {
@@ -46,6 +52,16 @@
 
 </head>
 <body>
+
+<?php
+        if(isset($_SESSION['success'])){
+            echo $_SESSION['success'];
+            unset($_SESSION['success']);
+        }elseif(isset($_SESSION['error'])){
+            echo $_SESSION['error'];
+            unset($_SESSION['error']);
+        }
+    ?>
   <div class="sidebar close">
     <div class="logo-details">
     <i class='bx bxs-cake'></i>
@@ -144,7 +160,104 @@
     <div class="home-content">
       <i class='bx bx-menu' ></i>
     </div>
-    <img src="image/bekery.jpg" alt="profileImg" width="1175" height="500">
+    <div class="container">
+      <div class="row text-center py-5">
+        <div class="col-md-3 col-sm-6 my-3 my-md-0">
+          <div class="card shadow">
+            <div>
+              <img style="width: 300px; height: 190px;" src="image/เค้กคัสตาด.jpg" alt="profileImg" class="img-fluid card-img-top">
+            </div>
+            <div class="card-body">
+              <h5 class="card-title">เค้กคัสตาด</h5>
+            </div>
+          </div>
+        </div>
+
+        <div class="col-md-3 col-sm-6 my-3 my-md-0">
+          <div class="card shadow">
+            <div>
+              <img style="width: 300px; height: 190px;" src="image/เค้กลาวา.jpg" alt="profileImg" class="img-fluid card-img-top">
+            </div>
+            <div class="card-body">
+              <h5 class="card-title">เค้กลาวา</h5>
+            </div>
+          </div>
+
+        </div>
+
+        <div class="col-md-3 col-sm-6 my-3 my-md-0">
+          <div class="card shadow">
+            <div>
+              <img style="width: 300px; height: 190px;" src="image/ขนมปังสังขยา.jpg" alt="profileImg" class="img-fluid card-img-top">
+            </div>
+            <div class="card-body">
+              <h5 class="card-title">ขนมปังไส้ใบเตย</h5>
+            </div>
+          </div>
+
+        </div>
+
+        <div class="col-md-3 col-sm-6 my-3 my-md-0">
+          <div class="card shadow">
+            <div>
+              <img style="width: 300px; height: 190px;" src="image/ขนมปังชาไทย.jpg" alt="profileImg" class="img-fluid card-img-top">
+            </div>
+            <div class="card-body">
+              <h5 class="card-title">ขนมปังชาไทย</h5>
+            </div>
+          </div>
+          <br>
+        </div>
+
+        <div class="col-md-3 col-sm-6 my-3 my-md-0">
+          <div class="card shadow">
+            <div>
+              <img style="width: 300px; height: 190px;" src="image/ชิฟฟ่อนมะพร้าวอ่อน.jpg" alt="profileImg" class="img-fluid card-img-top">
+            </div>
+            <div class="card-body">
+              <h5 class="card-title">ชิฟฟ่อนมะพร้าวอ่อน</h5>
+            </div>
+          </div>
+
+        </div>
+
+        <div class="col-md-3 col-sm-6 my-3 my-md-0">
+          <div class="card shadow">
+            <div>
+              <img style="width: 300px; height: 190px;" src="image/บานอฟฟี่.jpg" alt="profileImg" class="img-fluid card-img-top">
+            </div>
+            <div class="card-body">
+              <h5 class="card-title">บานอฟฟี่</h5>
+            </div>
+          </div>
+
+        </div>
+
+        <div class="col-md-3 col-sm-6 my-3 my-md-0">
+          <div class="card shadow">
+            <div>
+              <img style="width: 300px; height: 190px;" src="image/เอแคลร์.jpg" alt="profileImg" class="img-fluid card-img-top">
+            </div>
+            <div class="card-body">
+              <h5 class="card-title">เอแคลร์</h5>
+            </div>
+          </div>
+
+        </div>
+
+        <div class="col-md-3 col-sm-6 my-3 my-md-0">
+          <div class="card shadow">
+            <div>
+              <img style="width: 300px; height: 190px;" src="image/เค้กกล้วยหอมเนยสด.jpg" alt="profileImg" class="img-fluid card-img-top">
+            </div>
+            <div class="card-body">
+              <h5 class="card-title">เค้กกล้วยหอมเนยสด</h5>
+            </div>
+          </div>
+
+        </div>
+
+      </div>
   </section>
 
 

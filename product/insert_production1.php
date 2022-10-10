@@ -16,7 +16,6 @@ if(isset($_POST['save_order']))
     $Pro_date = $_POST['Pro_date'];
     
         for ($x=0 ; $x<count($_REQUEST['prolist']) ; $x++) {
-        /* if (isset($prolist)) { */
             $prolist = $_REQUEST['prolist'][$x];
             $pro_name = $_REQUEST['pro_name'][$x];
             $pro_num = $_REQUEST['pro_num'][$x];
@@ -112,7 +111,7 @@ if(isset($_POST['save_order']))
                         $m_sale_unit = ($m_sale/$pro_num)/$P_number;
                         $query = "INSERT INTO production_order (P_ID,P_name,Pro_amount,P_use,Pro_date,Pro_cost,Pro_cost_unit) VALUES ('$prolist','$pro_name','$pro_num','$pro_use','$Pro_date','$m_sale','$m_sale_unit')";
                         $query_run = mysqli_query($conn, $query);
-    
+                        
                         if ($query_run) {
                             $_SESSION['success'] = '<script>
                             Swal.fire({
@@ -131,7 +130,7 @@ if(isset($_POST['save_order']))
                                 position: "center",
                                 icon: "error",
                                 title: "ไม่สามารถสั่งผลิตได้",
-                                showConfirmButton: false,S
+                                showConfirmButton: false,
                                 timer: 1500
                             })
                         </script>';
@@ -148,14 +147,14 @@ if(isset($_POST['save_order']))
                             showConfirmButton: false,
                             timer: 1500
                         })
-                        </script>';
+                    </script>';
                         
-                        header("location: ../product/production_order.php");
+                        header("location: ../product/index_production.php");
                     }
                     
                     
-                }/* else{
-                    $_SESSION['error'] = '<script>
+                }else{
+                    $_SESSION['success'] = '<script>
                     Swal.fire({
                         position: "center",
                         icon: "error",
@@ -165,10 +164,11 @@ if(isset($_POST['save_order']))
                         })
                 </script>';
                 
-                header("location: index_production.php");
-                }  */
-            }
-    /*  } */
+                header("location: ../product/index_production.php");
+            
+                }  
+        }
+            
 }
 
 ?>

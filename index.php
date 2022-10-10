@@ -6,9 +6,15 @@
 // }
 session_start();
 require_once("config/config_sqli.php");
+
+if (!isset($_SESSION['admin'])) {
+  $_SESSION['msg'] = "Please Login";
+  header("location:loginform.php");
+}
+
 if (isset($_GET['logout'])) {
   
-  unset($_SESSION['username']);
+  unset($_SESSION['admin']);
   session_destroy();
   echo "<script>
         $(document).ready(function () {
@@ -51,6 +57,16 @@ if (isset($_GET['logout'])) {
 </head>
 
 <body>
+
+<?php
+        if(isset($_SESSION['success'])){
+            echo $_SESSION['success'];
+            unset($_SESSION['success']);
+        }elseif(isset($_SESSION['error'])){
+            echo $_SESSION['error'];
+            unset($_SESSION['error']);
+        }
+    ?>
   <div class="sidebar close">
     <div class="logo-details">
       <i class='bx bxs-cake'></i>

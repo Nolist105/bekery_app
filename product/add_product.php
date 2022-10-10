@@ -3,9 +3,14 @@
 <?php 
     session_start();
 
+    if (!isset($_SESSION['admin'])) {
+      $_SESSION['msg'] = "Please Login";
+      header("location:../loginform.php");
+  }
+
     if (isset($_GET['logout'])) {
       
-      unset($_SESSION['username']);
+      unset($_SESSION['admin']);
       session_destroy();
       echo "<script>
             $(document).ready(function () {

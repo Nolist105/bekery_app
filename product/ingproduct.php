@@ -4,6 +4,31 @@
 <?php
     session_start();
     require_once "../config/configpdo.php";
+
+    if (!isset($_SESSION['admin'])) {
+      $_SESSION['msg'] = "Please Login";
+      header("location:../loginform.php");
+  }
+
+    if (isset($_GET['logout'])) {
+      
+      unset($_SESSION['admin']);
+      session_destroy();
+      echo "<script>
+            $(document).ready(function () {
+            Swal.fire ({
+                  icon: 'success',
+                  title: 'ออกจากระบบแล้ว',
+                  text: 'กำลังกลับไปยังหน้าล็อคอิน',
+                  timer: 3000,
+                  showConfirmButton: false,
+            });
+            });
+      </script>";
+      header("refresh:2; url=../loginform.php");
+      // header("location: loginform.php");
+      
+    }
 ?>
 
 
@@ -20,7 +45,8 @@
     <!--Bootstap-->
     <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.0.2/dist/css/bootstrap.min.css" rel="stylesheet"
         integrity="sha384-EVSTQN3/azprG1Anm3QDgpJLIm9Nao0Yz1ztcQTwFspd3yD65VohhpuuCOmLASjC" crossorigin="anonymous">
-    <link rel="stylesheet" href="https://cdn.datatables.net/1.12.1/css/dataTables.bootstrap5.min.css%22%3E">
+    <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/bootstrap-icons@1.9.1/font/bootstrap-icons.css">
+    <link rel="stylesheet" href="https://cdn.datatables.net/1.12.1/css/dataTables.bootstrap5.min.css">
     <!--boxicon-->
     <link href='https://unpkg.com/boxicons@2.0.7/css/boxicons.min.css' rel='stylesheet'>
     <!--flaticon-->
@@ -90,6 +116,18 @@
         </ul>
       </li>
 
+      <li>
+          <div class="iocn-link">
+          <a href="../material/manage_report.php">
+          <i class='bx bxs-receipt'></i>
+              <span class="link_name">รายงาน</span>
+          </a>
+          <i class='bx bxs-chevron-down arrow'></i>
+          </div>
+          <ul class="sub-menu">
+          <li><a href="../material/manage_report.php">รายงานวัตถุดิบคงเหลือ</a></li>
+          </ul>
+      </li>
       
      
 
@@ -114,7 +152,7 @@
     </div>
 <!-- เพิม -->
       
-<div class="container">
+    <div class="container">
         <div class=" h4 text-center alert alert-info mb-4 mt-4" role="alert"> สูตรการผลิต</div>
         <hr>
         <form action="" method="GET" enctype="multipart/form-data" >
@@ -127,18 +165,14 @@
                     $data = $stml->fetch();
                 }
             ?>
-            <div class="card" style="width: fit-content;">
+            <div class="card mb-2" style="width: fit-content;">
                   <div class="card-body">
                     <h5 class="card-title"><?= $data['P_ID']; ?> <?= $data['P_name']; ?> <?= $data['P_quantity']; ?> <?= $data['P_unit_pro']; ?></h5>
                   </div>
-              </div>
-  
-        <?php
-        ?>
-       
-        <table id="datatableid" class="table table-striped table-hover table-bordered mt-2">
+            </div>
 
-          <thead>
+        <table id="datatableid" class="table table-striped table-hover table-bordered mt-2">
+          <thead class="table-danger">
             <tr align="center">
               <th scope="col" style="width: 200px;">รหัสวัตถุดิบ</th>
               <th scope="col" style="width: 200px;">ชื่อวัตถุดิบ</th>
@@ -147,20 +181,18 @@
 
             </tr>
           </thead>
-
           <tbody>
-
           <?php 
           
-                    $stmt = $conn -> query("SELECT * FROM ing INNER JOIN material ON ing.M_ID = material.id WHERE P_ID = $id");
-                    $stmt -> execute();
-                    $ing = $stmt -> fetchAll();
+                $stmt = $conn -> query("SELECT * FROM ing INNER JOIN material ON ing.M_ID = material.id WHERE P_ID = $id");
+                $stmt -> execute();
+                $ing = $stmt -> fetchAll();
 
-                    if (!$ing) {
-                        echo "<p><td colspan='8' class='text-center'>ไม่มีข้อมูล</td></p>";
-                    } else {
-                    foreach($ing as $ing)  {  
-                ?>
+                if (!$ing) {
+                    echo "<p><td colspan='8' class='text-center'>ไม่มีข้อมูล</td></p>";
+                } else {
+                foreach($ing as $ing)  {  
+            ?>
                 <tr align="center">
                   <td> <?= $ing['M_ID']; ?></td>
                   <td> <?= $ing['M_name']; ?></td>
@@ -170,26 +202,21 @@
                 <?php } 
                 } ?>
           </tbody>
-
         </table>
-
+        <div>
+            <a href="index.php" class="btn btn-danger">กลับ</a>    
+        </div>
         
-        <a href="editingredient.php"
-        class="icon-cog fs-5 me-3 btn btn-outline-warning"><i class="bi bi-pencil-fill"></i></a>
-        <a href="index.php" class="btn btn-danger">กลับ</a>
       </form>
     </div>
-  
+  </section>
     
-    </section>
-    
-    <script src="../script.js"></script>
-    <script src="https://code.jquery.com/jquery-3.6.0.js"></script>
-    <script src="https://cdn.jsdelivr.net/npm/sweetalert2@11"></script>
-    <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.0.2/dist/js/bootstrap.bundle.min.js"></script>
-    <script src="https://cdnjs.cloudflare.com/ajax/libs/jquery/3.6.1/jquery.min.js%22%3E"></script>
-    <script src="https://cdn.datatables.net/1.12.1/js/jquery.dataTables.min.js%22%3E"></script>
-    <script src="https://cdn.datatables.net/1.12.1/js/dataTables.bootstrap5.min.js%22%3E"></script>
+    <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.0.2/dist/js/bootstrap.bundle.min.js"
+        integrity="sha384-MrcW6ZMFYlzcLA8Nl+NtUVF0sA7MsXsP1UyJoMp4YLEuNSfAP+JcXn/tWtIaxVXM" crossorigin="anonymous">
+    </script>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/jquery/3.6.1/jquery.min.js"></script>
+    <script src="https://cdn.datatables.net/1.12.1/js/jquery.dataTables.min.js"></script>
+    <script src="https://cdn.datatables.net/1.12.1/js/dataTables.bootstrap5.min.js"></script>
 
     <script>
     $(document).ready(function() {
@@ -198,12 +225,12 @@
             language: {
                 "decimal": "",
                 "emptyTable": "ไม่มีข้อมูลในตาราง",
-                "info": "แสดง START - END จาก TOTAL รายการ",
+                "info": "แสดง _START_ - _END_ จาก _TOTAL_ รายการ",
                 "infoEmpty": "แสดง 0 - 0 จาก 0 รายการ",
-                "infoFiltered": "(กรอง จาก MAX รายการทั้งหมด)",
+                "infoFiltered": "(กรอง จาก _MAX_ รายการทั้งหมด)",
                 "infoPostFix": "",
                 "thousands": ",",
-                "lengthMenu": "แสดง MENU รายการ",
+                "lengthMenu": "แสดง _MENU_ รายการ",
                 "loadingRecords": "กำลังโหลด...",
                 "processing": "",
                 "search": "ค้นหา:",
@@ -219,10 +246,11 @@
                     "sortDescending": ": activate to sort column descending"
                 }
             },
-            "searching": false,
+            
 
         });
     });
     </script>
+    <script src="../script.js"></script>
 </body>
 </html>

@@ -1,3 +1,32 @@
+<?php 
+    session_start();
+    require_once "../config/configpdo.php";
+    
+    if (!isset($_SESSION['admin'])) {
+      $_SESSION['msg'] = "Please Login";
+      header("location:../loginform.php");
+  }
+
+    if (isset($_GET['logout'])) {
+      
+      unset($_SESSION['admin']);
+      session_destroy();
+      echo "<script>
+            $(document).ready(function () {
+            Swal.fire ({
+                  icon: 'success',
+                  title: 'ออกจากระบบแล้ว',
+                  text: 'กำลังกลับไปยังหน้าล็อคอิน',
+                  timer: 3000,
+                  showConfirmButton: false,
+            });
+            });
+      </script>";
+      header("refresh:2; url=../loginform.php");
+      // header("location: loginform.php");
+      
+    }
+?>
 
 <!DOCTYPE html>
 <html lang="en">
@@ -89,9 +118,6 @@
         </ul>
       </li>
 
-      
-     
-
       <li>
     <div class="profile-details">
       <div class="profile-content">
@@ -145,8 +171,9 @@
                         <option value="กิโลกรัม">กิโลกรัม</option>
                         <option value="กรัม">กรัม</option>
                         <option value="แผง">แผง</option>
-                        <option value="มิลลิลิตร">มิลลิลิตร</option>
                         <option value="ลิตร">ลิตร</option>
+                        <option value="มิลลิลิตร">มิลลิลิตร</option>
+                        
                     </select>
                 </div>
                 <div class="col">
@@ -164,7 +191,7 @@
             <div class="row py-2">
                 <div class="col">
                     <label>จำนวนแปลงหน่วย</label>
-                    <input type="number" value="<?= $data['M_number']; ?>" name="M_number" class="form-control" placeholder="ป้อนค่าจำนวนแปลงหน่วย" autocomplete="off" required>
+                    <input type="text" value="<?= $data['M_number']; ?>" name="M_number" class="form-control" placeholder="ป้อนค่าจำนวนแปลงหน่วย" autocomplete="off" required>
                 </div>
                 <div class="col">
                     <label>ค่า yield</label>

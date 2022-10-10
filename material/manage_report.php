@@ -1,26 +1,33 @@
 <script src="https://code.jquery.com/jquery-3.6.0.js"></script>
 <script src="https://cdn.jsdelivr.net/npm/sweetalert2@11"></script>
 <?php
-session_start();
-if (isset($_GET['logout'])) {
-  
-  unset($_SESSION['username']);
-  session_destroy();
-  echo "<script>
-        $(document).ready(function () {
-        Swal.fire ({
-              icon: 'success',
-              title: 'ออกจากระบบแล้ว',
-              text: 'กำลังกลับไปยังหน้าล็อคอิน',
-              timer: 3000,
-              showConfirmButton: false,
-        });
-        });
-  </script>";
-  header("refresh:2; url=../loginform.php");
-  // header("location: loginform.php");
-  
-}
+    session_start();
+    require_once "../config/config_sqli.php";
+    
+    if (!isset($_SESSION['admin'])) {
+      $_SESSION['msg'] = "Please Login";
+      header("location:../loginform.php");
+    }
+
+    if (isset($_GET['logout'])) {
+      
+      unset($_SESSION['admin']);
+      session_destroy();
+      echo "<script>
+            $(document).ready(function () {
+            Swal.fire ({
+                  icon: 'success',
+                  title: 'ออกจากระบบแล้ว',
+                  text: 'กำลังกลับไปยังหน้าล็อคอิน',
+                  timer: 3000,
+                  showConfirmButton: false,
+            });
+            });
+      </script>";
+      header("refresh:2; url=../loginform.php");
+      // header("location: loginform.php");
+      
+    }
 ?>
 
 <!DOCTYPE html>
@@ -146,10 +153,10 @@ if (isset($_GET['logout'])) {
     <div class="container">
         <div class=" h4 text-center alert alert-info mb-4 mt-4" role="alert">รายงานวัตถุดิบที่ต้องสั่งซื้อ</div>
         <hr>
-        <div class="col text-end">
-            <a href="../reportMat.php" class="btn btn-danger"><i class="bi bi-file-earmark-pdf"></i> โหลดรายงาน</a>
+        <div class="col text-end mb-2">
+            <a href="../reportMat.php" class="btn btn-danger"><i class="bi bi-file-earmark-pdf "></i> โหลดรายงาน</a>
         </div>
-        <table id="datatableid" class="table table-striped table-hover table-bordered">
+        <table id="datatableid" class="table table-striped table-hover table-bordered ">
             <thead class="table-danger">
                 <tr align="center">
                     <th scope="col">รหัสวัตถุดิบ</th>
@@ -233,7 +240,7 @@ if (isset($_GET['logout'])) {
                     "sortDescending": ": activate to sort column descending"
                 }
             },
-            "searching": false,
+            
 
         });
     });

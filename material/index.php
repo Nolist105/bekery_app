@@ -3,9 +3,14 @@
 
 <?php
     session_start();
+
+    if (!isset($_SESSION['admin'])) {
+      $_SESSION['msg'] = "Please Login";
+      header("location:../loginform.php");
+  }
     if (isset($_GET['logout'])) {
       
-      unset($_SESSION['username']);
+      unset($_SESSION['admin']);
       session_destroy();
       echo "<script>
             $(document).ready(function () {
@@ -180,12 +185,12 @@
     </div>
 
     <div class="container">
-        <div class=" h4 text-center alert alert-info mb-4 mt-2" role="alert"> ข้อมูลวัตถุดิบ</div>
+        <div class=" h4 text-center alert alert-info mb-4 mt-4" role="alert"> ข้อมูลวัตถุดิบ</div>
         <hr>
         <a href="add_material.php" class="btn btn-success mb-4"><i class="bi bi-plus-circle-fill"></i> เพิ่มวัตถุดิบ</a>
         <a href="restore_material.php" class="btn btn-outline-info mb-4"><i class="bi bi-trash3"></i> คืนค่าข้อมูล</a>
         <table id="datatableid" class="table table-striped table-hover table-bordered ">
-            <thead class="table-primary">
+            <thead class="table-danger">
                 <tr align="center">
                     <th scope="col">รหัสวัตถุดิบ</th>
                     <th scope="col">ชื่อวัตถุดิบ</th>
@@ -210,7 +215,7 @@
                     <td><?php echo $material['M_name']; ?></td>
                     <td><?php echo $material['M_unit_pack']; ?></td>
                     <td><?php echo $material['M_unit_use']; ?></td>
-                    <td align="right"><?php echo number_format($material['M_number']); ?></td>
+                    <td align="right"><?php echo number_format($material['M_number'],2); ?></td>
                     <td>
                         <a href="edit.php?id=<?php echo $material['id']; ?>" class="icon-cog fs-5 me-3"><i
                                 class="btn btn-outline-warning bi bi-pencil-fill"></i></a>
@@ -308,7 +313,7 @@
                     "sortDescending": ": activate to sort column descending"
                 }
             },
-            "searching": false,
+            
 
         });
     });

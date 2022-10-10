@@ -3,9 +3,16 @@
 
 <?php
     session_start();
+    require_once "../config/configpdo.php";
+
+    if (!isset($_SESSION['admin'])) {
+      $_SESSION['msg'] = "Please Login";
+      header("location:../loginform.php");
+  }
+
     if (isset($_GET['logout'])) {
       
-      unset($_SESSION['username']);
+      unset($_SESSION['admin']);
       session_destroy();
       echo "<script>
             $(document).ready(function () {
@@ -23,14 +30,20 @@
       
     }
     
-    require_once "../config/configpdo.php";
+    
 
     if (isset($_GET['delete'])) {
         $delete_id = $_GET['delete'];
         $stmt = $conn -> query("DELETE FROM product WHERE id = $delete_id");
         $stmt -> execute();
 
-        if ($stmt) {
+        $ing_delete = $conn->query("SELECT * FROM ing WHERE P_ID = $delete_id ");
+        $ing_delete1 = $ing_delete->fetchAll();
+
+        $stmt1 = $conn -> query("DELETE FROM ing WHERE P_ID = $delete_id");
+        $stmt1 -> execute();
+
+        if ($stmt && $stmt1) {
             $_SESSION['success'] = "ลบข้อมูลเรียบร้อยแล้ว";
             echo "<script>
                 $(document).ready(function () {
@@ -118,6 +131,7 @@
     <!--flaticon-->
     <link href="https://registry.npmjs.org/@flaticon/flaticon-uicons/-/flaticon-uicons-1.7.0.tgz" rel="stylesheet"> 
     <link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Bai+Jamjuree:ital,wght@0,200;0,300;0,400;0,500;0,600;0,700;1,200;1,300;1,400;1,500;1,600;1,700&family=Chakra+Petch:ital,wght@0,300;0,400;0,600;0,700;1,300;1,500;1,600;1,700&display=swap">
+    <link rel="stylesheet" href="https://cdn.datatables.net/1.12.1/css/dataTables.bootstrap5.min.css">
     <!--css-->
     <link rel="stylesheet" href="../style.css">
 
@@ -222,8 +236,8 @@
         <hr>
         <a href="index.php" class="btn btn-primary mb-4">กลับ</a>
         
-        <table class="table table-striped table-hover">
-            <thead>
+        <table id="datatableid" class="table table-striped table-hover table-bordered mt-2">
+          <thead class="table-danger">
                 <tr>
                     <th scope="col">รหัสสินค้า</th>
                     <th scope="col">ชื่อสินค้า</th>
@@ -267,14 +281,52 @@
         <hr>
         
     </div>
+
+    </section>
     <script src="https://code.jquery.com/jquery-3.6.0.js"></script>
     <script src="//cdn.jsdelivr.net/npm/sweetalert2@11"></script>
     <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.0.2/dist/js/bootstrap.bundle.min.js"
         integrity="sha384-MrcW6ZMFYlzcLA8Nl+NtUVF0sA7MsXsP1UyJoMp4YLEuNSfAP+JcXn/tWtIaxVXM" crossorigin="anonymous">
     </script>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/jquery/3.6.1/jquery.min.js"></script>
+    <script src="https://cdn.datatables.net/1.12.1/js/jquery.dataTables.min.js"></script>
+    <script src="https://cdn.datatables.net/1.12.1/js/dataTables.bootstrap5.min.js"></script>
 
+    <script>
+    $(document).ready(function() {
 
-  </section>
+        $('#datatableid').DataTable({
+            language: {
+                "decimal": "",
+                "emptyTable": "ไม่มีข้อมูลในตาราง",
+                "info": "แสดง _START_ - _END_ จาก _TOTAL_ รายการ",
+                "infoEmpty": "แสดง 0 - 0 จาก 0 รายการ",
+                "infoFiltered": "(กรอง จาก _MAX_ รายการทั้งหมด)",
+                "infoPostFix": "",
+                "thousands": ",",
+                "lengthMenu": "แสดง _MENU_ รายการ",
+                "loadingRecords": "กำลังโหลด...",
+                "processing": "",
+                "search": "ค้นหา:",
+                "zeroRecords": "ไม่พบบันทึกที่ตรงกัน",
+                "paginate": {
+                    "first": "First",
+                    "last": "Last",
+                    "next": "หน้าถัดไป",
+                    "previous": "ก่อนหน้า"
+                },
+                "aria": {
+                    "sortAscending": ": activate to sort column ascending",
+                    "sortDescending": ": activate to sort column descending"
+                }
+            },
+            
+
+        });
+    });
+    </script>
+
+ 
 
   <script src="../script.js"></script>
 

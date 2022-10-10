@@ -28,37 +28,37 @@
                 $_SESSION['password'] = $row["password"];
                 $_SESSION['urole'] = $row["urole"];
                 if ($_SESSION['urole'] == "1") {
-                    $_SESSION['username'] = $username;
+                    $_SESSION['admin'] = $username;
                     // $_SESSION['success'] = "เข้าสู่ระบบแล้ว";
-                    echo "<script>
-                        $(document).ready(function () {
-                            Swal.fire ({
-                                icon: 'success',
-                                title: 'เข้าสู่ระบบแล้ว',
-                                text: 'ยินดีต้อนรับเจ้าของร้าน',
-                                timer: 2000,
-                                showConfirmButton: true
-                            });
-                        });
-                    </script>";
-                    header("refresh:2; url=index.php");
+                    echo $_SESSION['success'] = '<script>
+                    Swal.fire({
+                        position: "center",
+                        icon: "success",
+                        title: "เข้าสู่ระบบแล้ว",
+                        text: "ยินดีต้อนรับเจ้าของร้าน",
+                        showConfirmButton: false,
+                        timer: 1500
+                        })
+                    </script>';
+                    
+                    header("location: index.php");
                     // header("location: index.php");
                 } 
                 elseif ($_SESSION['urole'] == '0') {
-                    $_SESSION['username'] = $username;
+                    $_SESSION['user'] = $username;
                     // $_SESSION['success'] = "เข้าสู่ระบบแล้ว";
-                    echo "<script>
-                        $(document).ready(function () {
-                            Swal.fire ({
-                                icon: 'success',
-                                title: 'เข้าสู่ระบบแล้ว',
-                                text: 'ยินดีต้อนรับพนักงาน',
-                                timer: 2000,
-                                showConfirmButton: true
-                            });
-                        });
-                    </script>";
-                    header("refresh:2; url=indexuser.php");
+                    echo $_SESSION['success'] = '<script>
+                    Swal.fire({
+                        position: "center",
+                        icon: "success",
+                        title: "เข้าสู่ระบบแล้ว",
+                        text: "ยินดีต้อนรับพนักงาน",
+                        showConfirmButton: false,
+                        timer: 1500
+                        })
+                    </script>';
+                    
+                    header("location: indexuser.php");
                 } else {
                 array_push($errors, "ชื่อผู้ใช้หรือรหัสผ่านไม่ถูกต้อง");
                 $_SESSION['error'] = "ชื่อผู้ใช้หรือรหัสผ่านไม่ถูกต้อง";

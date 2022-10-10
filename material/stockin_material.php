@@ -2,9 +2,15 @@
 <script src="https://cdn.jsdelivr.net/npm/sweetalert2@11"></script>
 <?php
     session_start();
+
+    if (!isset($_SESSION['user'])) {
+      $_SESSION['msg'] = "Please Login";
+      header("location:../loginform.php");
+    }
+
     if (isset($_GET['logout'])) {
       
-      unset($_SESSION['username']);
+      unset($_SESSION['user']);
       session_destroy();
       echo "<script>
             $(document).ready(function () {

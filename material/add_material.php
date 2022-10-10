@@ -193,6 +193,7 @@ session_start();
                         <option value="กรัม">กรัม</option>
                         <option value="แผง">แผง</option>
                         <option value="ลิตร">ลิตร</option>
+                        <option value="มิลลิลิตร">มิลลิลิตร</option>
                     </select>
                 </div>
                 <div class="col">
@@ -210,7 +211,7 @@ session_start();
             <div class="row py-2">
                 <div class="col">
                     <label>จำนวนแปลงหน่วย</label>
-                    <input type="number" name="M_number" class="form-control" placeholder="ป้อนค่าจำนวนแปลงหน่วย"  
+                    <input type="text" name="M_number" class="form-control" placeholder="ป้อนค่าจำนวนแปลงหน่วย"  
                     maxlength="10" oninvalid="setCustomValidity('กรุณาป้อนจำนวนแปลงหน่วย')" oninput="setCustomValidity('')" required>
                 </div>
                 <div class="col">

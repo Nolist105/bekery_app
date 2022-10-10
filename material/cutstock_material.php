@@ -2,9 +2,15 @@
 <script src="https://cdn.jsdelivr.net/npm/sweetalert2@11"></script>
 <?php
     session_start();
+
+    if (!isset($_SESSION['user'])) {
+      $_SESSION['msg'] = "Please Login";
+      header("location:../loginform.php");
+    }
+
     if (isset($_GET['logout'])) {
       
-      unset($_SESSION['username']);
+      unset($_SESSION['user']);
       session_destroy();
       echo "<script>
             $(document).ready(function () {
@@ -196,25 +202,75 @@
     </div>
 
     <div class="container">
-        <div class=" h4 text-center alert alert-info mb-4 mt-4" role="alert">ตัดสต็อกวัตถุดิบ</div>
-        <form action="insert_cutstock.php" method="post" enctype="multipart/form-data">
+        <div class=" h4 text-center alert alert-info mb-4 mt-4" role="alert">ตัดสต็อกวัตถุดิบเสียหาย</div>
+        <?php if(isset($_POST['continue'])){ ?>
+           <form action="insert_cutstock.php" method="post" enctype="multipart/form-data">  
+            <?php } else { ?>
+                <form  method="post" enctype="multipart/form-data">  
+            <?php } ?>
+                
+            <?php if(isset($_POST['continue'])){ 
+                $select2 = $conn->query("SELECT * FROM material WHERE id = '".$_POST['M_name']."'");
+                $row_select2 = $select2->fetch_array();
+                ?>
+                <div class="row py-2">
+                    <div class="col">
+                        <label>รหัสวัตถุดิบ</label>
+                        <input readonly type="text" value="<?= $row_select2['M_ID'] ?>" name="M_ID"  class="form-control" >
+                    </div>
+                    <div class="col">
+                        <label>ชื่อวัตถุดิบ</label>
+                        <input readonly type="text" value="<?= $row_select2['M_name'] ?>" name="M_name"  class="form-control" >
+                    </div>
+                </div>
+                <div class="row">
+                    <div class="col">
+                    <label>ล็อตวัตถุดิบ</label>
+                    <select name="id"  class="form-select" required>
+                        <option value="" selected hidden>----เลือก----</option>
+                        <?php 
+                            $i = '1';
+                            $select = $conn->query("SELECT * FROM stockin WHERE M_ID = '".$_POST['M_ID']."'");
+                            while($rows_select = mysqli_fetch_array($select)){
+                              
+                            ?>
+                        <option value="<?=$rows_select['id'];?>" >ล็อตที่ <?= $i++ ?></option>
+                        <?php } ?>
+                    </select>
+                    </div>
+                    <div class="col">
+                    <label>จำนวน</label>
+                        <input type="number" name="M_num"  class="form-control" required>
+                    </div>
+                </div>
+            <?php } else { ?>
             <div class="row py-2">
                 <div class="col">
                     <label>รหัสวัตถุดิบ</label>
-                    <input readonly type="text" name="M_ID" id="M_ID" class="form-control" required>
+                    <input readonly type="text" name="M_ID" id="M_ID" class="form-control" >
                 </div>
                 <div class="col ">
                     <label>ชื่อวัตถุดิบ</label>
 
-                    <select name="M_name" id="cut_mat" class="form-select" onchange="fetchemp1()">
+                    <select name="M_name" id="cut_mat" class="form-select" onchange="fetchemp1()" required>
                         <option value="" selected hidden>----เลือก----</option>
                         <?php 
 
                             while($rows = mysqli_fetch_array($result)){
+                            
+                            $m_name = "";
+                            $show_stock  = "SELECT * FROM stockin  WHERE M_name = '".$rows['id']."' ORDER BY id ASC";
+                            $query_stock = mysqli_query($conn, $show_stock);
+
+                            while($row1=mysqli_fetch_array($query_stock)) {
+                              $m_name = $row1['M_name'];
+                          }
+                          if($m_name == $rows['id']){
                             ?>
+
                         <option value="<?=$rows['id'];?>" ><?=$rows['M_name'];?></option>
                         <?php
-                            }
+                            }}
                             mysqli_close($conn); //ปิดการเชื่อมต่อฐานข้อมูล
                         ?>
                     </select>
@@ -225,22 +281,23 @@
                     <label>หน่วยใช้</label>
                     <input readonly type="text" name="M_unit_use" id="M_unit_use" class="form-control" >
                 </div>
-
-                <div class="col">
-                    <label>จำนวนที่ต้องการตัด</label>
-                    <input type="number" min="1" name="M_num" class="form-control" oninvalid="setCustomValidity('กรุณาป้อนค่าจำนวน')" placeholder="ป้อนค่าจำนวน"
-                        required>
-                </div>
             </div>
-            <div>
-            <button type="submit" name="submit" class="btn btn-success my-3">ตัดสต็อก</button>
-            <!-- <a href="#" class="btn btn-danger">กลับ</a> -->
+            <?php } ?>
+
+            <div class="d-flex justify-content-end mt-3">
+            <!-- <button class="btn btn-danger" style="margin-right: 5px;">กลับ</button>  -->
+            <?php 
+                if(isset($_POST['continue'])){
+            ?>
+                <button type="submit" name="submit" class="btn btn-success">ตัดสต็อก</button>
+            <?php } else { ?>
+                <button type="submit" name="continue" class="btn btn-success">ดำเนินการต่อ</button>
+            <?php } ?>
             </div>
         </form>
 
     </div>
     </div>
-
   </section>
     <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.0.2/dist/js/bootstrap.bundle.min.js"
         integrity="sha384-MrcW6ZMFYlzcLA8Nl+NtUVF0sA7MsXsP1UyJoMp4YLEuNSfAP+JcXn/tWtIaxVXM" crossorigin="anonymous">

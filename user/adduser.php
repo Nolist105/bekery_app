@@ -1,28 +1,33 @@
 <script src="https://code.jquery.com/jquery-3.6.0.js"></script>
 <script src="https://cdn.jsdelivr.net/npm/sweetalert2@11"></script>
 <?php
-include '../config/config_sqli.php';
-session_start();
-if (isset($_GET['logout'])) {
+  session_start();
+  include '../config/config_sqli.php';
   
-  unset($_SESSION['username']);
-  session_destroy();
-  echo "<script>
-        $(document).ready(function () {
-        Swal.fire ({
-              icon: 'success',
-              title: 'ออกจากระบบแล้ว',
-              text: 'กำลังกลับไปยังหน้าล็อคอิน',
-              timer: 3000,
-              showConfirmButton: false,
-        });
-        });
-  </script>";
-  header("refresh:2; url=../loginform.php");
-  // header("location: loginform.php");
-  
+  if (!isset($_SESSION['admin'])) {
+    $_SESSION['msg'] = "Please Login";
+    header("location:../loginform.php");
 }
-?>
+  if (isset($_GET['logout'])) {
+    
+    unset($_SESSION['admin']);
+    session_destroy();
+    echo "<script>
+          $(document).ready(function () {
+          Swal.fire ({
+                icon: 'success',
+                title: 'ออกจากระบบแล้ว',
+                text: 'กำลังกลับไปยังหน้าล็อคอิน',
+                timer: 3000,
+                showConfirmButton: false,
+          });
+          });
+    </script>";
+    header("refresh:2; url=../loginform.php");
+    // header("location: loginform.php");
+    
+  }
+  ?>
 
 <!DOCTYPE html>
 <html lang="en">

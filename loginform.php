@@ -68,7 +68,7 @@ session_start();
                             <div class="col-lg-6">
                                 <div class="p-5">
                                     <div class="text-center">
-                                        <h1 class="h4 text-gray-900 mb-4">เข้าสู่ระบบร้านเบเกอรี่</h1>
+                                        <h1 class="h4 text-gray-900 mb-4">เข้าสู่ระบบร้านเบเกอรี</h1>
                                     </div>
 
                                     <form action="logindb.php" class="form-floating" method="post" enctype="multipart/form-data">
@@ -109,6 +109,7 @@ session_start();
                                         </div>
                                         <div class="form-group">
                                             <button type="submit" id="submit" class="btn btn-orange btn-user btn-block" name="login_state">เข้าสู่ระบบ</button>
+                                            <a href="home.php" class="btn btn-secondary btn-user btn-block">กลับ</a>
                                         </div>
 
 

@@ -1,3 +1,33 @@
+<?php
+      session_start();
+      require_once "../config/configpdo.php";
+
+      if (!isset($_SESSION['user'])) {
+        $_SESSION['msg'] = "Please Login";
+        header("location:../loginform.php");
+      }
+
+      if (isset($_GET['logout'])) {
+        
+        unset($_SESSION['user']);
+        session_destroy();
+        echo "<script>
+              $(document).ready(function () {
+              Swal.fire ({
+                    icon: 'success',
+                    title: 'ออกจากระบบแล้ว',
+                    text: 'กำลังกลับไปยังหน้าล็อคอิน',
+                    timer: 3000,
+                    showConfirmButton: false,
+              });
+              });
+        </script>";
+        header("refresh:2; url=../loginform.php");
+        // header("location: loginform.php");
+        
+      }
+?>
+
 <!DOCTYPE html>
 <html lang="en">
 
@@ -156,12 +186,14 @@
 
 
     <div class="container">
-        <div class=" h4 text-center alert alert-info mb-4 mt-4" role="alert">แก้ไขข้อมูลความต้องการใช้สินค้า</div>
+        <div class=" h4 text-center alert alert-info mb-4 mt-4" role="alert">แก้ไขข้อมูลความต้องการใช้วัตถุดิบ</div>
         <form action="update_orderpoint.php" method="post" enctype="multipart/form-data">
         <?php
                 require_once "../config/configpdo.php";
                 if (isset($_GET['id'])) {
                     $id = $_GET['id'];
+
+                    
                     $stml = $conn->query("SELECT * FROM orderpoint WHERE id = $id");
                     $stml->execute();
                     $data = $stml->fetch();
@@ -179,16 +211,16 @@
                 </div>
             </div>
 
-            <label>D</label>
+            <label>ความต้องการใช้วัตถุดิบในแต่ละวัน(D)</label>
             <div class="input-group">
-                <input type="number" name="D" value="<?= $data['D']; ?>" class="form-control" placeholder="ป้อนอัตราความต้องการสินค้าคงคลัง"
+                <input type="number" name="D" value="<?= $data['D']; ?>" class="form-control" placeholder="ความต้องการใช้วัตถุดิบในแต่ละวัน"
                     required>
                 <span class="input-group-text">/วัน</span>
             </div>
 
-            <label>LT</label>
+             <label>ระยะเวลาในการรอคอยวัตถุดิบ(LT)</label>
             <div class="input-group">
-                <input type="number" name="LT" value="<?= $data['LT']; ?>" class="form-control" placeholder="ป้อนเวลาในการรอคอยสินค้า" required>
+                <input type="number" name="LT" value="<?= $data['LT']; ?>" class="form-control" placeholder="ป้อนระยะเวลาในการรอคอยวัตถุดิบ" required>
                 <span class="input-group-text">วัน</span>
 
             </div>

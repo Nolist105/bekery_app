@@ -5,9 +5,14 @@
     session_start();
     require_once "../config/config_sqli.php";
 
+    if (!isset($_SESSION['admin'])) {
+      $_SESSION['msg'] = "Please Login";
+      header("location:../loginform.php");
+  }
+
     if (isset($_GET['logout'])) {
       
-      unset($_SESSION['username']);
+      unset($_SESSION['admin']);
       session_destroy();
       echo "<script>
             $(document).ready(function () {
@@ -351,7 +356,7 @@
                     "sortDescending": ": activate to sort column descending"
                 }
             },
-            "searching": false,
+            
 
         });
     });

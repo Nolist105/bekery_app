@@ -3,9 +3,16 @@
 
 <?php 
     session_start();
+    require_once "../config/config_sqli.php";
+
+    if (!isset($_SESSION['user'])) {
+      $_SESSION['msg'] = "Please Login";
+      header("location:../loginform.php");
+    }
+
     if (isset($_GET['logout'])) {
       
-      unset($_SESSION['username']);
+      unset($_SESSION['user']);
       session_destroy();
       echo "<script>
             $(document).ready(function () {
@@ -22,7 +29,7 @@
       // header("location: loginform.php");
       
     }
-    require_once "../config/config_sqli.php";
+    
 
 ?>
 
@@ -177,33 +184,36 @@
         <table id="datatableid" class="table table-striped table-hover table-bordered style="width:100%"">
             <thead class="table-danger">
                 <tr align="center">
+                    <th>ล็อต</th>
                     <th scope="col">วันที่รับเข้า</th>
                     <th scope="col">รหัสวัตถุดิบ</th>
                     <th scope="col">ชื่อวัตถุดิบ</th>
                     <th scope="col">จำนวนที่รับเข้า</th>
                     <th scope="col">หน่วยซื้อ</th>
-                    <th scope="col">คงเหลือ</th>
+                    <th scope="col">คงเหลือ(หน่วยซื้อ)</th>
                     <th scope="col">ต้นทุนที่รับเข้า</th>
                 </tr>
             </thead>
             <tbody>
                 <?php 
                 
-        
-                $stmt = "SELECT stockin.*,material.M_name FROM stockin INNER JOIN material ON stockin.M_ID = material.M_ID ORDER BY stockin.id ASC ";                
+                $i = 1;
+                $stmt = "SELECT stockin.*,material.M_name FROM stockin INNER JOIN material ON stockin.M_ID = material.M_ID ORDER BY stockin.M_ID ASC ";
                 $stockin = $conn->query($stmt);
                     if (!$stockin) {
                         echo "<p><td colspan='8' class='text-center'>ไม่มีข้อมูล</td></p>";
                     } else {
-                    foreach($stockin as $stockin)  {  
+                    foreach($stockin as $stockin)  {
                 ?>
                 <tr align="center">
+
+                    <td> ล็อตที่ <?= $stockin['S_num'];?></td>
                     <td><?php echo $stockin['S_date']; ?></td>
                     <td><?php echo $stockin['M_ID']; ?></td>
                     <td><?php echo $stockin['M_name']; ?></td>
                     <td><?php echo $stockin['S_in']; ?></td>
                     <td><?php echo $stockin['S_unit_pack']; ?></td>
-                    <td><?php echo number_format($stockin['S_balance']); ?></td>
+                    <td><?php echo number_format($stockin['S_total'],2); ?></td>
                     <td align="right"><?php echo number_format($stockin['S_cost'], 2); ?></td>
                 </tr>
                 <?php } 

@@ -3,9 +3,15 @@
 <?php
     session_start();
     require_once "../config/config_sqli.php";
+
+    if (!isset($_SESSION['admin'])) {
+        $_SESSION['msg'] = "Please Login";
+        header("location:../loginform.php");
+    }
+
     if (isset($_GET['logout'])) {
   
-        unset($_SESSION['username']);
+        unset($_SESSION['admin']);
         session_destroy();
         echo "<script>
               $(document).ready(function () {
@@ -129,17 +135,14 @@
                         </ul>
                     </li>
 
-                    
-                    
-
                     <li>
                     <div class="profile-details">
                     <div class="profile-content">
                         <img src="../image/bekery.jpg" alt="profileImg">
                     </div>
                     <div class="name-job">
-                        <div class="profile_name">Bekery</div>
-                        <div class="job">Web Desginer</div>
+                        <div class="profile_name">เจ้าของร้าน</div>
+                        <div class="job">BAKERY STORE</div>
                     </div>
                     <a href="user.php?logout='1'"> <i class='bx bx-log-out'  id="log_out" ></i> </a>
                     </div>
@@ -156,7 +159,7 @@
         <div class=" h4 text-center alert alert-info mb-4 mt-4" role="alert"> ข้อมูลผู้ใช้ (พนักงาน)</div>
         <a href="adduser.php" class="btn btn-success mb-4">เพิ่มผู้ใช้</a>
         <table id="datatableid" class="table table-striped table-hover table-bordered">
-        <thead class="table-primary">
+        <thead class="table-danger">
                 <tr align="center">
                     <th scope="col">ชื่อผู้ใช้</th>
                     <th scope="col">จัดการ</th>
@@ -272,7 +275,7 @@
                     "sortDescending": ": activate to sort column descending"
                 }
             },
-            "searching": false,
+            
 
         });
     });

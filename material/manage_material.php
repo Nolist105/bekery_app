@@ -2,9 +2,16 @@
 <script src="https://cdn.jsdelivr.net/npm/sweetalert2@11"></script>
 <?php
     session_start();
+    require_once "../config/config_sqli.php";
+
+    if (!isset($_SESSION['user'])) {
+      $_SESSION['msg'] = "Please Login";
+      header("location:../loginform.php");
+    }
+
     if (isset($_GET['logout'])) {
       
-      unset($_SESSION['username']);
+      unset($_SESSION['user']);
       session_destroy();
       echo "<script>
             $(document).ready(function () {
@@ -162,7 +169,7 @@
                     <th scope="col">รหัสวัตถุดิบ</th>
                     <th scope="col">ชื่อวัตถุดิบ</th>
                     <th scope="col">จำนวนคงเหลือ</th>
-                    <th scope="col">หน่วยใช้</th>
+                    <th scope="col">หน่วยซื้อ</th>
                     <th scope="col">จุดสั่งซื้อ</th>
                     <th scope="col">สถานะ</th>
                 </tr>
@@ -182,8 +189,8 @@
                 <tr align="center">
                     <td><?php echo $material['M_ID']; ?></td>
                     <td><?php echo $material['M_name']; ?></td>
-                    <td align="right"><?php echo number_format($material['M_balane']); ?></td>
-                    <td><?php echo $material['M_unit_use']; ?></td>
+                    <td align="right"><?php echo number_format($material['M_balane'],2); ?></td>
+                    <td><?php echo $material['M_unit_pack']; ?></td>
                     <td align="right"><?php echo $material['M_point']; ?></td>
                     <td>
                         <?php
@@ -238,7 +245,7 @@
                     "sortDescending": ": activate to sort column descending"
                 }
             },
-            "searching": false,
+            
 
         });
     });
