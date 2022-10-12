@@ -74,7 +74,7 @@
                 Swal.fire({
                     position: "center",
                     icon: "error",
-                    title: "วัตถุดิบไม่เพียงพอ",
+                    title: "วัตถุดิบในล็อตนี้ไม่เพียงพอ",
                     showConfirmButton: false,
                     timer: 1500
                     })

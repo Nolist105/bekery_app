@@ -18,7 +18,7 @@
     <div class="container bg">
         <div class="navBar " >
             <div class="logo">
-                <a href="cover.php">
+                <a href="home.php">
                     <i class="fas fa-solid fa-store"></i>
                 </a>
             </div>

@@ -193,8 +193,10 @@
                 if (isset($_GET['id'])) {
                     $id = $_GET['id'];
 
-                    
-                    $stml = $conn->query("SELECT * FROM orderpoint WHERE id = $id");
+            /*$stmt1 = $conn -> query("SELECT orderpoint.*,material.M_name FROM orderpoint INNER JOIN material WHERE id = $id AND orderpoint.M_name = material.id");
+ */
+                    $stml = $conn->query("SELECT orderpoint.*,material.M_name FROM orderpoint INNER JOIN material WHERE orderpoint.id = $id AND orderpoint.M_name = material.id"); 
+                    /* $stml = $conn->query("SELECT * FROM orderpoint WHERE id = $id");  */
                     $stml->execute();
                     $data = $stml->fetch();
                 }

@@ -126,7 +126,7 @@ if(isset($_POST['save_order']))
                         
                             header("location: ../product/index_production.php");
                         } else {
-                            $_SESSION['success'] = '<script>
+                            $_SESSION['error'] = '<script>
                             Swal.fire({
                                 position: "center",
                                 icon: "error",
@@ -150,11 +150,11 @@ if(isset($_POST['save_order']))
                         })
                         </script>';
                         
-                        header("location: ../product/production_order.php");
+                        header("location: ../product/index_production.php");
                     }
                     
                     
-                }/* else{
+                } /* else{
                     $_SESSION['error'] = '<script>
                     Swal.fire({
                         position: "center",

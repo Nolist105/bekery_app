@@ -35,6 +35,12 @@
         $stmt = $conn -> query("DELETE FROM material WHERE id = $delete_id");
         $stmt -> execute();
 
+        $odp_delete = $conn->query("SELECT * FROM orderpoint WHERE M_name = $delete_id ");
+        $odp_delete1 = $odp_delete->fetchAll();
+
+        $stmt2 = $conn -> query("DELETE FROM orderpoint WHERE M_name = $delete_id");
+        $stmt2 -> execute();
+
         if ($stmt) {
             $_SESSION['success'] = "ลบข้อมูลเรียบร้อยแล้ว";
             echo "<script>

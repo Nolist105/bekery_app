@@ -101,12 +101,12 @@ session_start();
                                             <input type="password" class="form-control" name="password" placeholder="รหัสผ่าน" oninvalid="setCustomValidity('กรุณาป้อนรหัสผ่าน')" maxlength="4" oninput="setCustomValidity('')" required id="id_password">
                                             <i class="far fa-eye" style=" margin-left: -20px; cursor: pointer;" id="togglePassword"></i>
                                         </div>
-                                        <div class="form-group">
+                                       <!--  <div class="form-group">
                                             <div class="custom-control custom-checkbox small">
                                                 <input type="checkbox" class="custom-control-input" id="customCheck">
                                                 <label class="custom-control-label" for="customCheck">Remember</label>
                                             </div>
-                                        </div>
+                                        </div> -->
                                         <div class="form-group">
                                             <button type="submit" id="submit" class="btn btn-orange btn-user btn-block" name="login_state">เข้าสู่ระบบ</button>
                                             <a href="home.php" class="btn btn-secondary btn-user btn-block">กลับ</a>
